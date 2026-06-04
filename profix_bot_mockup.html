@@ -1,0 +1,262 @@
+
+<style>
+.phone{background:var(--color-background-secondary);border-radius:16px;padding:16px;max-width:340px;margin:0 auto}
+.screen{background:#0f1117;border-radius:12px;overflow:hidden;font-family:var(--font-sans)}
+.tg-header{background:#1a1f2e;padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #2a2f3e}
+.tg-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7F77DD,#534AB7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#fff;flex-shrink:0}
+.tg-name{font-size:14px;font-weight:500;color:#fff}
+.tg-status{font-size:11px;color:#7F77DD}
+.msgs{padding:12px;display:flex;flex-direction:column;gap:8px;min-height:420px;background:#0f1117}
+.msg-bot{background:#1e2235;border-radius:4px 12px 12px 12px;padding:10px 12px;max-width:88%;align-self:flex-start}
+.msg-bot p{margin:0;font-size:13px;color:#e0e0e0;line-height:1.5}
+.msg-bot .time{font-size:10px;color:#555;margin-top:4px;text-align:right}
+.msg-user{background:#2d3561;border-radius:12px 4px 12px 12px;padding:8px 12px;max-width:72%;align-self:flex-end}
+.msg-user p{margin:0;font-size:13px;color:#e0e0e0}
+.banner{background:linear-gradient(135deg,#1a1f3e,#2d1f4e);border-radius:8px;padding:14px;margin-bottom:4px;border:1px solid #7F77DD44}
+.banner-title{font-size:18px;font-weight:700;color:#fff;letter-spacing:1px}
+.banner-sub{font-size:11px;color:#AFA9EC;margin-top:2px}
+.banner-badge{display:inline-block;background:#7F77DD22;border:1px solid #7F77DD;color:#AFA9EC;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:6px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.btn-tg{background:#1e2235;border:1px solid #2a3050;border-radius:8px;padding:8px 6px;text-align:center;cursor:pointer;transition:background .15s}
+.btn-tg:hover{background:#2a3050}
+.btn-tg .bicon{font-size:16px;display:block;margin-bottom:2px}
+.btn-tg .blabel{font-size:11px;color:#c0c0d0}
+.btn-tg.accent{border-color:#7F77DD;background:#1a1f3e}
+.btn-tg.accent .blabel{color:#AFA9EC}
+.btn-wide{grid-column:1/-1}
+.divider{height:1px;background:#2a2f3e;margin:4px 0}
+.step-nav{display:flex;gap:6px;padding:8px 16px;justify-content:center;flex-wrap:wrap}
+.step-btn{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;color:var(--color-text-secondary)}
+.step-btn.active{background:var(--color-background-info);border-color:var(--color-border-info);color:var(--color-text-info);font-weight:500}
+.section-label{font-size:12px;color:var(--color-text-tertiary);text-align:center;margin:8px 0 4px;font-weight:500}
+.analysis-card{background:#1a2235;border-radius:8px;padding:10px 12px;border-left:3px solid #7F77DD}
+.analysis-card .ateam{font-size:13px;font-weight:600;color:#fff;margin-bottom:6px}
+.analysis-card .arow{display:flex;justify-content:space-between;margin-bottom:3px}
+.analysis-card .alabel{font-size:11px;color:#7a7a9a}
+.analysis-card .aval{font-size:11px;color:#AFA9EC;font-weight:500}
+.pct-bar{height:4px;background:#2a2f3e;border-radius:2px;margin:6px 0}
+.pct-fill{height:4px;background:#7F77DD;border-radius:2px}
+.promo-box{background:#1a2a1a;border:1px solid #3B6D11;border-radius:8px;padding:10px 12px;margin-top:6px}
+.promo-box .ptitle{font-size:12px;color:#97C459;font-weight:600}
+.promo-box .pcode{font-size:16px;font-weight:700;color:#fff;letter-spacing:2px;margin:4px 0}
+.promo-box .plink{font-size:11px;color:#639922}
+</style>
+
+<div class="section-label">Экранды тандаңыз</div>
+<div class="step-nav">
+  <button class="step-btn active" onclick="showScreen(0)">Тил тандоо</button>
+  <button class="step-btn" onclick="showScreen(1)">Welcome</button>
+  <button class="step-btn" onclick="showScreen(2)">Башкы меню</button>
+  <button class="step-btn" onclick="showScreen(3)">Матч анализ</button>
+  <button class="step-btn" onclick="showScreen(4)">Оюн сигнал</button>
+  <button class="step-btn" onclick="showScreen(5)">Бонустар</button>
+  <button class="step-btn" onclick="showScreen(6)">VIP / Дос</button>
+  <button class="step-btn" onclick="showScreen(7)">Админ</button>
+</div>
+
+<div class="phone">
+  <div class="screen">
+    <div class="tg-header">
+      <div class="tg-avatar">PF</div>
+      <div><div class="tg-name">PROFIX</div><div class="tg-status">бот · онлайн</div></div>
+    </div>
+    <div class="msgs" id="screen-content"></div>
+  </div>
+</div>
+
+<script>
+const screens = [
+  () => `
+    <div class="msg-bot">
+      <p>🌐 Тилди тандаңыз<br><br>Выберите язык</p>
+      <div class="btns" style="grid-template-columns:1fr 1fr;margin-top:8px">
+        <div class="btn-tg accent"><span class="bicon">🇰🇬</span><span class="blabel">Кыргызча</span></div>
+        <div class="btn-tg"><span class="bicon">🇷🇺</span><span class="blabel">Русский</span></div>
+      </div>
+      <div class="time">09:41</div>
+    </div>`,
+
+  () => `
+    <div class="msg-bot">
+      <div class="banner">
+        <div class="banner-title">⚡ PROFIX</div>
+        <div class="banner-sub">AI Спорт Анализ · Оюн Сигналдары</div>
+        <div class="banner-badge">🎁 Биринчи депозитке +200% бонус</div>
+      </div>
+      <p>Саламатсызбы! PROFIX ботуна кош келдиңиз 🏆<br><br>
+      ✅ AI матч анализ — кыргызча<br>
+      ✅ Авиатор · Чикен сигналдары<br>
+      ✅ Промокод + бонустар<br>
+      ✅ 24/7 суроо-жооп чат</p>
+      <div class="btns">
+        <div class="btn-tg accent btn-wide"><span class="blabel">📢 Каналга жазыл — уланууга</span></div>
+      </div>
+      <div class="time">09:41</div>
+    </div>`,
+
+  () => `
+    <div class="msg-user"><p>✅ Жазылдым</p></div>
+    <div class="msg-bot" style="margin-top:4px">
+      <p>✅ Текшерилди! Кош келдиңиз 🎉</p>
+      <div class="btns">
+        <div class="btn-tg accent"><span class="bicon">⚽</span><span class="blabel">Спорт анализ</span></div>
+        <div class="btn-tg"><span class="bicon">🎮</span><span class="blabel">Оюн сигнал</span></div>
+        <div class="btn-tg"><span class="bicon">🎁</span><span class="blabel">Бонустар</span></div>
+        <div class="btn-tg"><span class="bicon">👥</span><span class="blabel">Дос чакыр VIP</span></div>
+        <div class="btn-tg"><span class="bicon">💬</span><span class="blabel">AI чат</span></div>
+        <div class="btn-tg"><span class="bicon">⚙️</span><span class="blabel">Профиль</span></div>
+      </div>
+      <div class="time">09:42</div>
+    </div>`,
+
+  () => `
+    <div class="msg-user"><p>⚽ Спорт анализ</p></div>
+    <div class="msg-bot">
+      <p>Матч тандаңыз 📅 Бүгүн:</p>
+      <div class="btns" style="grid-template-columns:1fr">
+        <div class="btn-tg accent"><span class="blabel">🔴 Арсенал vs Манчестер Сити · 21:00</span></div>
+        <div class="btn-tg"><span class="blabel">🟡 Барселона vs Реал Мадрид · 22:00</span></div>
+        <div class="btn-tg"><span class="blabel">🔵 Челси vs Ливерпуль · 20:00</span></div>
+      </div>
+      <div class="time">09:42</div>
+    </div>
+    <div class="msg-user"><p>Арсенал vs Манчестер Сити</p></div>
+    <div class="msg-bot">
+      <div class="analysis-card">
+        <div class="ateam">🔴 Арсенал vs 🔵 Манчестер Сити</div>
+        <div class="arow"><span class="alabel">Арсенал жеңүү</span><span class="aval">42%</span></div>
+        <div class="pct-bar"><div class="pct-fill" style="width:42%"></div></div>
+        <div class="arow"><span class="alabel">Манчестер Сити жеңүү</span><span class="aval">38%</span></div>
+        <div class="pct-bar"><div class="pct-fill" style="width:38%;background:#378ADD"></div></div>
+        <div class="arow"><span class="alabel">Эки жак тең</span><span class="aval">20%</span></div>
+        <div class="pct-bar"><div class="pct-fill" style="width:20%;background:#888780"></div></div>
+      </div>
+      <p style="margin-top:8px;font-size:12px;color:#a0a0c0">
+      📋 <b>Состав:</b> Холанд травма — ойнобойт<br>
+      📈 <b>Арсенал акыркы 5 оюн:</b> Ж·Ж·Т·Ж·Ж<br>
+      ⚡ <b>Болжол:</b> Арсенал 2–1 жеңет</p>
+      <div class="promo-box">
+        <div class="ptitle">🎁 Ставка коюп бонус ал</div>
+        <div class="pcode">WIN500</div>
+        <div class="plink">1win.com/kg · промокод жаз → +200% бонус</div>
+      </div>
+      <div class="time">09:43</div>
+    </div>`,
+
+  () => `
+    <div class="msg-user"><p>🎮 Оюн сигнал</p></div>
+    <div class="msg-bot">
+      <p>Оюн тандаңыз:</p>
+      <div class="btns">
+        <div class="btn-tg accent"><span class="bicon">✈️</span><span class="blabel">Авиатор</span></div>
+        <div class="btn-tg"><span class="bicon">🐔</span><span class="blabel">Чикен</span></div>
+        <div class="btn-tg"><span class="bicon">💥</span><span class="blabel">Краш</span></div>
+        <div class="btn-tg"><span class="bicon">🎰</span><span class="blabel">Башка</span></div>
+      </div>
+      <div class="time">09:44</div>
+    </div>
+    <div class="msg-user"><p>✈️ Авиатор</p></div>
+    <div class="msg-bot">
+      <div class="banner" style="background:#1a2a1a;border-color:#3B6D1144">
+        <div style="font-size:11px;color:#97C459;font-weight:600">✈️ АВИАТОР СИГНАЛ</div>
+        <div style="font-size:28px;font-weight:700;color:#fff;margin:4px 0">3.24x</div>
+        <div style="font-size:11px;color:#639922">Кийинки учуу болжолу</div>
+      </div>
+      <p style="font-size:12px;color:#a0a0c0">
+      ⏱ Жарактуулук: 2 мүнөт<br>
+      📊 Акыркы 5: 1.8 · 4.2 · 2.1 · 6.7 · 1.4</p>
+      <div class="btns">
+        <div class="btn-tg accent btn-wide"><span class="blabel">🔄 Жаңы сигнал алуу</span></div>
+      </div>
+      <div class="time">09:44</div>
+    </div>`,
+
+  () => `
+    <div class="msg-user"><p>🎁 Бонустар</p></div>
+    <div class="msg-bot">
+      <p>Платформа тандаңыз:</p>
+      <div class="btns" style="grid-template-columns:1fr">
+        <div class="btn-tg accent">
+          <span class="blabel" style="font-size:13px">🏆 1Win — +200% бонус · WIN500</span>
+        </div>
+        <div class="btn-tg">
+          <span class="blabel" style="font-size:13px">⚡ 1xBet — +130% бонус · BET300</span>
+        </div>
+        <div class="btn-tg">
+          <span class="blabel" style="font-size:13px">🎯 Melbet — +100% бонус · MEL200</span>
+        </div>
+      </div>
+      <div class="time">09:45</div>
+    </div>
+    <div class="msg-user"><p>1Win</p></div>
+    <div class="msg-bot">
+      <p style="font-size:13px;color:#e0e0e0">
+      📝 <b>Кантип бонус алуу:</b><br><br>
+      1️⃣ Төмөндөгү ссылкадан кириңиз<br>
+      2️⃣ Жаңы акк ачыңыз<br>
+      3️⃣ Промокод жазыңыз: <b style="color:#97C459">WIN500</b><br>
+      4️⃣ Биринчи депозит коюңуз<br>
+      ✅ +200% бонус автоматтык активдешет!</p>
+      <div class="promo-box">
+        <div class="ptitle">🔗 Ссылка + Промокод</div>
+        <div class="pcode">WIN500</div>
+        <div class="plink">👆 Промокод "Каттоо" бетинде жазылат</div>
+      </div>
+      <div class="btns">
+        <div class="btn-tg accent btn-wide"><span class="blabel">🚀 1Win ге кириш — ссылка</span></div>
+      </div>
+      <div class="time">09:45</div>
+    </div>`,
+
+  () => `
+    <div class="msg-user"><p>👥 Дос чакыр VIP ал</p></div>
+    <div class="msg-bot">
+      <div class="banner">
+        <div class="banner-title" style="font-size:15px">👑 VIP ПРОГРАММА</div>
+        <div class="banner-sub">Дос чакыр — бекер VIP ал</div>
+      </div>
+      <p style="font-size:12px;color:#a0a0c0">
+      👤 1 дос = 3 күн VIP<br>
+      👥 3 дос = 2 жума VIP<br>
+      👨‍👩‍👧‍👦 5 дос = 1 ай VIP<br><br>
+      👑 <b>VIP артыкчылыктары:</b><br>
+      ✅ Чексиз матч анализ<br>
+      ✅ Лайв матч маалымат<br>
+      ✅ Эрте сигналдар<br>
+      ✅ Жеке AI кеңеш</p>
+      <div class="analysis-card" style="margin-top:8px">
+        <div style="font-size:11px;color:#AFA9EC">Сенин шилтемең:</div>
+        <div style="font-size:12px;color:#fff;margin:4px 0;font-family:monospace">t.me/PROFIX_bot?start=REF7823</div>
+        <div style="font-size:11px;color:#7a7a9a">Азыр: 2 дос кирди · Дагы 1 керек</div>
+      </div>
+      <div class="btns">
+        <div class="btn-tg accent btn-wide"><span class="blabel">📤 Шилтемени жиберүү</span></div>
+      </div>
+      <div class="time">09:46</div>
+    </div>`,
+
+  () => `
+    <div class="msg-bot">
+      <p>🔐 <b>Админ панель</b><br><br>Буйруктар:</p>
+      <div class="btns" style="grid-template-columns:1fr">
+        <div class="btn-tg accent"><span class="blabel">/setlink 1win [ссылка] [промокод]</span></div>
+        <div class="btn-tg"><span class="blabel">/broadcast [текст же фото]</span></div>
+        <div class="btn-tg"><span class="blabel">/stats — колдонуучу санагы</span></div>
+        <div class="btn-tg"><span class="blabel">/setvip @username [күн]</span></div>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:12px;color:#a0a0c0">
+      📊 Жалпы колдонуучу: <b style="color:#fff">1,247</b><br>
+      👑 VIP: <b style="color:#AFA9EC">89</b><br>
+      📅 Бүгүн кирген: <b style="color:#97C459">43</b><br>
+      ⚠️ 1Win ссылкасы: <b style="color:#E24B4A">3 саатта өчөт</b></p>
+      <div class="time">09:47</div>
+    </div>`
+];
+
+function showScreen(i) {
+  document.getElementById('screen-content').innerHTML = screens[i]();
+  document.querySelectorAll('.step-btn').forEach((b,j) => b.classList.toggle('active', j===i));
+}
+showScreen(0);
+</script>
