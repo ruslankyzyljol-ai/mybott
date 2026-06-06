@@ -2,8 +2,7 @@ import telebot
 import threading
 import schedule
 import time
-from telebot import types
-from config import BOT_TOKEN, ADMIN_ID
+from config import BOT_TOKEN
 import start
 import sports
 import games
@@ -28,10 +27,8 @@ def run_scheduler():
         schedule.run_pending()
         time.sleep(60)
 
-if __name__ == "__main__":
-    print("PROFIX бот иштеп баштады!")
-    match_updater.start_match_updater(bot)
-    t = threading.Thread(target=run_scheduler)
-    t.daemon = True
-    t.start()
-    bot.infinity_polling()
+match_updater.start_match_updater(bot)
+t = threading.Thread(target=run_scheduler)
+t.daemon = True
+t.start()
+bot.infinity_polling()
