@@ -1,22 +1,33 @@
 from telebot import types
+import requests
+import os
 import random
+
+GEMINI_API = os.environ.get("GEMINI_API", "")
 
 ANSWERS = [
     "Бул команда акыркы матчтарда жакшы форм көрсөтүп жатат. Жеңүү мүмкүнчүлүгү жогору.",
     "Травмалар таасир этип жатат. Башкы оюнчулар жок болушу натыйжага таасир берет.",
     "Эки команда тең күчтүү. Үй ээсинин артыкчылыгы бар.",
     "Акыркы 5 матчта бул команда 4 жолу утуп алды. Жакшы форм!",
-    "Статистика боюнча үй командасы 60% мүмкүнчүлүккө ээ.",
 ]
 
 def get_ai_response(question):
-    q = question.lower() if question else ""
-    if any(w in q for w in ["неге", "эмне", "себеп"]):
-        return "Травмалар, форм жана тактика айырмасы чечүүчү роль ойнойт."
-    if any(w in q for w in ["травма", "ойнобойт", "жок"]):
-        return "Башкы оюнчу жок болсо команда 20-30% алсызданат."
-    if any(w in q for w in ["ставка", "коэф", "кой"]):
-        return "Бир ставкага 5-10% гана бөлүңүз. Жогорку коэф = жогорку тобокел."
+    if GEMINI_API:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_API}"
+            body = {
+                "contents": [{
+                    "parts": [{
+                        "text": f"Сен PROFIX деген спорт анализ ботусуң. Кыргызча жооп бер. Суроо: {question}"
+                    }]
+                }]
+            }
+            r = requests.post(url, json=body, timeout=10)
+            if r.status_code == 200:
+                return r.json()["candidates"][0]["content"]["parts"][0]["text"]
+        except:
+            pass
     return random.choice(ANSWERS)
 
 def register_chat(bot):
@@ -29,7 +40,7 @@ def register_chat(bot):
         kb.row("🔙 Башкы менюга")
         bot.send_message(msg.chat.id,
             "💬 *AI Чат*\n\nСаламатсызбы! Спорт жана оюндар жөнүндө каалаган суроону бериңиз.\n\n"
-            "Мисалы:\n• Холанд эмне үчүн ойнобойт?\n• Кайсы команда утат?",
+            "Мисалы:\n• Холанд эмне үчүн ойнобойт?\n• Кайсы команда утат?\n• Авиатор стратегиясы?",
             parse_mode="Markdown", reply_markup=kb)
 
     @bot.message_handler(func=lambda m: m.text == "🔙 Башкы менюга")
