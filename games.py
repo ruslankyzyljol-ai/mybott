@@ -23,9 +23,9 @@ def register_games(bot):
         kb = types.InlineKeyboardMarkup()
         kb.add(types.InlineKeyboardButton("🔄 Жаңы сигнал", callback_data="game_aviator"))
         bot.send_message(call.message.chat.id,
-            f"✈️ *АВИАТОР СИГНАЛЫ*\n\n🎯 Болжол: *{coef}x*\n⏱ 2 мүнөт жарактуу\n\n"
+            f"✈️ *АВИАТОР СИГНАЛЫ*\n\n🎯: *{coef}x*\n⏱ 2 мүнөт жарактуу\n\n"
             f"📊 Акыркы 5: {' · '.join([str(h)+'x' for h in history])}\n\n"
-            f"⚠️ 100% кепилдик эмес",
+            f"⚠️ 100%",
             parse_mode="Markdown", reply_markup=kb)
 
     @bot.callback_query_handler(func=lambda c: c.data == "game_chicken")
@@ -37,7 +37,7 @@ def register_games(bot):
         kb.add(types.InlineKeyboardButton("🔄 Жаңы сигнал", callback_data="game_chicken"))
         bot.send_message(call.message.chat.id,
             f"🐔 *ЧИКЕН СИГНАЛЫ*\n\n🎯 Коэф: *{multiplier}x*\n💣 Бомба: {bombs}\n"
-            f"💡 {multiplier}x га жеткенде чыгыңыз\n\n⚠️ 100% кепилдик эмес",
+            f"💡 {multiplier}x га жеткенде чыгыңыз\n\n 100%",
             parse_mode="Markdown", reply_markup=kb)
 
     @bot.callback_query_handler(func=lambda c: c.data == "game_crash")
@@ -47,7 +47,7 @@ def register_games(bot):
         kb = types.InlineKeyboardMarkup()
         kb.add(types.InlineKeyboardButton("🔄 Жаңы сигнал", callback_data="game_crash"))
         bot.send_message(call.message.chat.id,
-            f"💥 *КРАШ СИГНАЛЫ*\n\n🎯 Чыгуу: *{coef}x*\n\n⚠️ 100% кепилдик эмес",
+            f"💥 *КРАШ СИГНАЛЫ*\n\n🎯 Чыгуу: *{coef}x*\n\n 100%",
             parse_mode="Markdown", reply_markup=kb)
 
     @bot.callback_query_handler(func=lambda c: c.data == "game_slot")
